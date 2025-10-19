@@ -28,13 +28,14 @@ def batch_generator(X, y, batch_size=32):
 def epoch_loop(model, X, y, train=True, batch_size=32):
   running_loss, correct, total = 0, 0, 0
   for features, target in batch_generator(X, y, batch_size):
+    model.zero_grad()
+    
     output = model.forward(features)
     loss = model.calculate_loss(output, target)
 
     if train:
       model.backward(output, target)
       model.optimize()
-      model.zero_grad()
 
     running_loss += loss * features.shape[0]
     pred = output.argmax(axis=1)#.reshape(target.shape[0], 1)
