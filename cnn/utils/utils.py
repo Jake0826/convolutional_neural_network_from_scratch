@@ -107,8 +107,8 @@ def epoch_loop(
   epoch_loss = running_loss / X.shape[0]
   epoch_accuracy = correct / total 
 
-  if train:
-    model.optimizer.post_update_params()
+  # if train:
+  #   model.optimizer.post_update_params()
 
   return epoch_loss, epoch_accuracy
 

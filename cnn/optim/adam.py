@@ -2,6 +2,7 @@
 import numpy as np 
 from .optimzer import Optimizer
 from ..module import Module
+
 class Adam(Optimizer):
   def __init__(
       self, 
@@ -45,6 +46,8 @@ class Adam(Optimizer):
     
     layer.weights = layer.weights - self.lr * weights_momentums_corrected / np.sqrt(weights_cache_corrected + self.eps)
     layer.biases = layer.biases - self.lr * biases_momentums_corrected / np.sqrt(biases_cache_corrected + self.eps)
+
+    self.iterations += 1
 
   def post_update_params(self):
     self.iterations += 1
