@@ -6,9 +6,9 @@ from ..module import Module
 class Adam(Optimizer):
   def __init__(
       self, 
-      lr: float = 0.01, 
+      lr: float = 0.001, 
       decay: float = 0.0, 
-      eps: float = 1e-7, 
+      eps: float = 1e-8, 
       beta_1: float = 0.9, 
       beta_2: float = 0.999
     ):

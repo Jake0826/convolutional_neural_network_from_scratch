@@ -16,13 +16,13 @@ def generate_spiral_data(N: int, D: int, K: int) -> Tuple[np.ndarray, np.ndarray
   # lets visualize the data:
   plt.xlabel("X_1")
   plt.ylabel("X_2")
-  plt.title("True Value")
+  plt.title("Spiral Data")
   plt.scatter(X[:, 0], X[:, 1], c=y, s=40, cmap='brg')
   plt.show()
 
   return X, y
 
-def plot_spiral_data_decision_boundary(model: Sequential) -> None:
+def plot_spiral_data_decision_boundary(model: Sequential, title: str = "") -> None:
   x_1 = np.arange(-1, 1, 0.01)
   x_2 = np.arange(-1, 1, 0.01)
   X_1, X_2 = np.meshgrid(x_1, x_2)
@@ -40,7 +40,7 @@ def plot_spiral_data_decision_boundary(model: Sequential) -> None:
   plt.ylim(-1,1)
   plt.xlabel('X_1')
   plt.ylabel('X_2')
-  plt.title('Model Predictions')
+  plt.title(title)
   plt.show()
 
 def train_val_test_split(
@@ -139,31 +139,36 @@ def train_val(
 
   return train_losses, train_accuracies, val_losses, val_accuracies
 
-def plot_train_val(
-  train_losses: List, 
-  train_accuracies: List, 
-  val_losses: List, 
-  val_accuracies: List, 
-  title: str = ""
+def plot_training_metrics(
+  train_losses: List[float], 
+  train_accuracies: List[float], 
+  val_losses: List[float], 
+  val_accuracies: List[float], 
+  title: str = "",
 ) -> None:
   
-  plt.title(f"{title} Cross Entropy Loss")
-  plt.xlabel('Epoch')
-  plt.ylabel('Cross Entropy Loss')
-  plt.plot(train_losses, label= 'Train')
-  plt.plot(val_losses, label='Validation')
-  plt.legend()
-  plt.tight_layout()
-  plt.show()
+  epochs = np.arange(1, len(train_losses) + 1)
+  fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
   
-  plt.title(f"{title} Classification Accuracy")
-  plt.xlabel('Epoch')
-  plt.ylabel('Classification Accuracy')
-  plt.plot(train_accuracies, label= 'Train')
-  plt.plot(val_accuracies, label='Validation')
-  plt.legend()
+  ax1.plot(epochs, train_losses, label='Train', linewidth=2, marker='o', markersize=3, alpha=0.8)
+  ax1.plot(epochs, val_losses, label='Validation', linewidth=2, marker='s', markersize=3, alpha=0.8)
+  ax1.set_title(f"{title} Cross Entropy Loss", fontweight='bold')
+  ax1.set_xlabel('Epoch', fontsize=11)
+  ax1.set_ylabel('Loss', fontsize=11)
+  ax1.legend()
+  ax1.set_ylim(ymin = 0)
+  
+  ax2.plot(epochs, train_accuracies, label='Train', linewidth=2, marker='o', markersize=3, alpha=0.8)
+  ax2.plot(epochs, val_accuracies, label='Validation', linewidth=2, marker='s', markersize=3, alpha=0.8)
+  ax2.set_title(f"{title} Classification Accuracy", fontweight='bold')
+  ax2.set_xlabel('Epoch', fontsize=11)
+  ax2.set_ylabel('Accuracy', fontsize=11)
+  ax2.legend()
+  ax2.set_ylim(ymin = 0, ymax = 1)
+
   plt.tight_layout()
   plt.show()
+
 
 def test(
   model: Sequential, 
