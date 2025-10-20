@@ -4,11 +4,11 @@ from ..module import Module
 
 #Per CS231 notes 'For Pooling layers, it is not common to pad the input using zero-padding.'
 class MaxPool2d(Module):
-  def __init__(self, kernel_size=2, stride=2):
+  def __init__(self, kernel_size: int = 2, stride: int = 2):
     self.kernel_size = kernel_size
     self.stride = stride 
   
-# (B, C, H, W) -> (B, C, H_out, W_out)
+  # (B, C, H, W) -> (B, C, H_out, W_out)
   def forward(self, x):
       self.x = x
       

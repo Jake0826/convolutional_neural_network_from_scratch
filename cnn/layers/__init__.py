@@ -4,6 +4,7 @@ from .softmax import Softmax
 from .dropout import Dropout
 from .conv2d import Conv2d
 from .maxpool2d import MaxPool2d
+from .flatten import Flatten 
 
 __all__ = [
   'Linear', 
@@ -11,5 +12,6 @@ __all__ = [
   'Softmax', 
   'Dropout', 
   'Conv2d', 
-  'MaxPool2d'
+  'MaxPool2d',
+  'Flatten'
   ]

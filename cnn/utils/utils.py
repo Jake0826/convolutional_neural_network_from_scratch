@@ -1,6 +1,57 @@
 import numpy as np 
+from ..sequential import Sequential
+from typing import Tuple, List
+import matplotlib.pyplot as plt 
 
-def train_val_test_split(X, y, train_pct=0.7, val_pct=0.15, test_pct=0.15):
+# Dataset from https://cs231n.github.io/neural-networks-case-study/ 
+def generate_spiral_data(N: int, D: int, K: int) -> Tuple[np.ndarray, np.ndarray]:
+  X = np.zeros((N*K,D)) # data matrix (each row = single example)
+  y = np.zeros(N*K, dtype='uint8') # class labels
+  for j in range(K):
+    ix = range(N*j,N*(j+1))
+    r = np.linspace(0.0,1,N) # radius
+    t = np.linspace(j*4,(j+1)*4,N) + np.random.randn(N)*0.2 # theta
+    X[ix] = np.c_[r*np.sin(t), r*np.cos(t)]
+    y[ix] = j
+  # lets visualize the data:
+  plt.xlabel("X_1")
+  plt.ylabel("X_2")
+  plt.title("True Value")
+  plt.scatter(X[:, 0], X[:, 1], c=y, s=40, cmap='brg')
+  plt.show()
+
+  return X, y
+
+def plot_spiral_data_decision_boundary(model: Sequential) -> None:
+  x_1 = np.arange(-1, 1, 0.01)
+  x_2 = np.arange(-1, 1, 0.01)
+  X_1, X_2 = np.meshgrid(x_1, x_2)
+
+  X_grid = np.c_[X_1.flatten(), X_2.flatten()]
+  output = model(X_grid)
+
+  pred = np.argmax(output, axis=1)
+  Z = pred.reshape(X_1.shape)
+
+  plt.figure(figsize=(6, 5))
+  plt.contourf(X_1, X_2, Z, cmap='brg')
+
+  plt.xlim(-1,1)
+  plt.ylim(-1,1)
+  plt.xlabel('X_1')
+  plt.ylabel('X_2')
+  plt.title('Model Predictions')
+  plt.show()
+
+def train_val_test_split(
+  X: np.ndarray, 
+  y: np.ndarray, 
+  train_pct: float = 0.7, 
+  val_pct: float = 0.15, 
+  test_pct: float = 0.15
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+  
+
   assert np.isclose(train_pct + val_pct + test_pct, 1.0), "Ratios must sum to 1"
 
   size = len(X)
@@ -16,7 +67,11 @@ def train_val_test_split(X, y, train_pct=0.7, val_pct=0.15, test_pct=0.15):
 
   return X_train, X_val, X_test, y_train, y_val, y_test
 
-def batch_generator(X, y, batch_size=32):
+def batch_generator(
+    X: np.ndarray, 
+    y: np.ndarray, 
+    batch_size: int = 32
+): #TODO add return type of yield function
   num_samples = X.shape[0]
   indicies = np.arange(num_samples)
   for i in range(0, num_samples, batch_size):
@@ -25,7 +80,14 @@ def batch_generator(X, y, batch_size=32):
     yield X[idx], y[idx]
 
 
-def epoch_loop(model, X, y, train=True, batch_size=32):
+def epoch_loop(
+  model: Sequential, 
+  X: np.ndarray, 
+  y: np.ndarray, 
+  train: bool = True, 
+  batch_size: int = 32
+) -> Tuple[float, float]:
+  
   running_loss, correct, total = 0, 0, 0
   for features, target in batch_generator(X, y, batch_size):
     model.zero_grad()
@@ -43,14 +105,23 @@ def epoch_loop(model, X, y, train=True, batch_size=32):
     total += target.shape[0]
 
   epoch_loss = running_loss / X.shape[0]
-  epoch_accuracy = correct / total # type: ignore
+  epoch_accuracy = correct / total 
 
   if train:
     model.optimizer.post_update_params()
 
   return epoch_loss, epoch_accuracy
 
-def train(model, X_train, y_train, X_val, y_val, epochs=100, batch_size=32):
+def train_val(
+  model: Sequential, 
+  X_train: np.ndarray,
+  y_train: np.ndarray, 
+  X_val: np.ndarray, 
+  y_val: np.ndarray,
+  epochs: int = 100, 
+  verbose_freq: int = 1
+) -> Tuple[List, List, List, List]:
+  
   train_losses, train_accuracies = [], []
   val_losses, val_accuracies = [], []
 
@@ -63,6 +134,43 @@ def train(model, X_train, y_train, X_val, y_val, epochs=100, batch_size=32):
     val_losses.append(val_loss)
     val_accuracies.append(val_accuracy)
 
-    print(f"Epoch {epoch + 1}, Train Loss: {train_loss:4f}, Train Accuracy: {train_accuracy:4f}, Val Loss: {val_loss:4f}, Val Accuracy: {val_accuracy:4f}")  
+    if (epoch + 1) % verbose_freq == 0:
+      print(f"Epoch {epoch + 1}, Train Loss: {train_loss:4f}, Train Accuracy: {train_accuracy:4f}, Val Loss: {val_loss:4f}, Val Accuracy: {val_accuracy:4f}")  
 
   return train_losses, train_accuracies, val_losses, val_accuracies
+
+def plot_train_val(
+  train_losses: List, 
+  train_accuracies: List, 
+  val_losses: List, 
+  val_accuracies: List, 
+  title: str = ""
+) -> None:
+  
+  plt.title(f"{title} Cross Entropy Loss")
+  plt.xlabel('Epoch')
+  plt.ylabel('Cross Entropy Loss')
+  plt.plot(train_losses, label= 'Train')
+  plt.plot(val_losses, label='Validation')
+  plt.legend()
+  plt.tight_layout()
+  plt.show()
+  
+  plt.title(f"{title} Classification Accuracy")
+  plt.xlabel('Epoch')
+  plt.ylabel('Classification Accuracy')
+  plt.plot(train_accuracies, label= 'Train')
+  plt.plot(val_accuracies, label='Validation')
+  plt.legend()
+  plt.tight_layout()
+  plt.show()
+
+def test(
+  model: Sequential, 
+  X_test: np.ndarray, 
+  y_test: np.ndarray
+) -> Tuple[float, float]:
+  
+  test_loss, test_accuracy = epoch_loop(model, X_test, y_test, train=False)
+  print(f"Test Loss: {test_loss:4f}, Test Accuracy: {test_accuracy:4f}")
+  return test_loss, test_accuracy  

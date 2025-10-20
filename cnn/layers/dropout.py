@@ -2,7 +2,7 @@ import numpy as np
 from ..module import Module
 
 class Dropout(Module):
-  def __init__(self, p):
+  def __init__(self, p: float = 0.5):
     self.rate = 1 - p 
 
   def forward(self, x):

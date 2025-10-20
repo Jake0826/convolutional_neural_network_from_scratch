@@ -3,20 +3,30 @@ import numpy as np
 from ..module import Module
 
 class Conv2d(Module):
-  def __init__(self, in_channels=3, out_channels=1, kernel_size=3, stride=1, padding=0):
+  def __init__(
+        self, 
+        in_channels: int = 3,
+        out_channels: int = 1, 
+        kernel_size: int = 3, 
+        stride: int = 1, 
+        padding: int = 0
+    ):
+    
     self.in_channels = in_channels
     self.out_channels = out_channels
     self.kernel_size = kernel_size
     self.stride = stride 
     self.padding = padding 
 
-    self.weights = np.random.randn(
+    std = np.sqrt(2.0 / (self.in_channels * self.kernel_size * self.kernel_size))
+    shape = (
         self.out_channels, 
         self.in_channels, 
         self.kernel_size, 
         self.kernel_size
-    ) * np.sqrt(2.0 / (self.in_channels * self.kernel_size * self.kernel_size))
-    
+    )
+
+    self.weights = np.random.normal(0, std, shape)
     self.biases = np.zeros((self.out_channels))
 
   def forward(self, x):
