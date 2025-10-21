@@ -11,6 +11,10 @@ import torch.nn.functional as F
 from typing import List, Tuple, Optional
 from contextlib import nullcontext
 
+'''
+This file contains helper functions I used to train 
+the reference PyTorch nerual networks.
+'''
 def pytorch_generate_dataloader(X, y, batch_size=32):
   X_tensor = torch.tensor(X, dtype=torch.float32)
   y_tensor = torch.tensor(y, dtype=torch.long)

@@ -76,7 +76,7 @@ train_losses, train_accuracies, val_losses, val_accuracies = train_val(
 
 ## Results
 
-In the notebooks in the `models/` directory, I achieve nearly identical accuracy compared to PyTorch implementations on both the spiral dataset and Fashion-MNIST, validating that the custom implementation is mathematically correct.
+In the notebooks in the `models/` directory, I achieve nearly identical accuracy compared to PyTorch implementations on both the spiral dataset (NN) and Fashion-MNIST (CNN), validating that the custom implementation is mathematically correct.
 
 ## Installation
 ```bash

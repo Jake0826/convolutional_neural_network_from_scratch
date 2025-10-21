@@ -7,9 +7,11 @@ from typing import List
 
 class Sequential(Module):
   """  
-  This class chains together multiple layers, handles forward and backward
-  propagation automatically, and manages loss computation and optimization.
-  Users must provide a list of layers, a loss function, and an optimizer.
+  # Build model
+  model = Sequential(
+      layers=ordered_layers,
+      loss_func=loss,
+      optimizer=optim)
   """
 
   def __init__(

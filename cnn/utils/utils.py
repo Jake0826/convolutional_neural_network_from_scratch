@@ -4,7 +4,8 @@ from typing import Tuple, List
 import matplotlib.pyplot as plt 
 
 '''
-This file contains helper functions I use in /model to train the neural network.
+This file contains helper functions 
+I use in /model to train the homemade neural networks.
 '''
 
 # Dataset from https://cs231n.github.io/neural-networks-case-study/ 
