@@ -2,14 +2,15 @@
 import numpy as np 
 from ..module import Module
 
+
 class Conv2d(Module):
   def __init__(
         self, 
-        in_channels: int = 3,
-        out_channels: int = 1, 
+        in_channels: int,
+        out_channels: int, 
         kernel_size: int = 3, 
         stride: int = 1, 
-        padding: int = 0
+        padding: int = 1
     ):
     
     self.in_channels = in_channels
@@ -79,3 +80,36 @@ class Conv2d(Module):
           x.strides[2],
           x.strides[3]
       )
+  
+
+# # Slower but more readable forward pass below
+
+#   def forward(self, x):
+#     self.x = x
+    
+#     self.x_padded = np.pad(x, ((0, 0), (0, 0), (self.padding, self.padding), (self.padding, self.padding)))
+#     B, C, H, W = self.x_padded.shape
+#     H_out = (H - self.kernel_size) // self.stride + 1
+#     W_out = (W - self.kernel_size) // self.stride + 1
+
+#     self.output = np.zeros((
+#       B, 
+#       self.out_channels, 
+#       H_out,
+#       W_out
+#     ))
+
+#     for b in range(B):
+#       for c in range(self.out_channels):
+#         for h in range(H_out):
+#           for w in range(W_out):
+
+#             pool = self.x_padded[
+#               b, 
+#               :, 
+#               h * self.stride: h * self.stride + self.kernel_size, 
+#               w * self.stride: w * self.stride + self.kernel_size
+#             ]
+#             self.output[b,c,h,w] = np.sum(pool * self.weights) + self.biases 
+
+#     return self.output

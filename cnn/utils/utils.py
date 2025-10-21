@@ -71,7 +71,7 @@ def batch_generator(
     X: np.ndarray, 
     y: np.ndarray, 
     batch_size: int = 32
-): #TODO add return type of yield function
+): 
   num_samples = X.shape[0]
   indicies = np.arange(num_samples)
   for i in range(0, num_samples, batch_size):
@@ -89,7 +89,12 @@ def epoch_loop(
 ) -> Tuple[float, float]:
   
   running_loss, correct, total = 0, 0, 0
-  for features, target in batch_generator(X, y, batch_size):
+  for idx, (features, target) in enumerate(batch_generator(X, y, batch_size)):
+    if idx % 100 == 0:
+      print(f"{idx} out of {X.shape[0] // batch_size}")
+    
+    target = target.flatten()
+
     model.zero_grad()
     
     output = model.forward(features)
@@ -100,15 +105,12 @@ def epoch_loop(
       model.optimize()
 
     running_loss += loss * features.shape[0]
-    pred = output.argmax(axis=1)#.reshape(target.shape[0], 1)
+    pred = output.argmax(axis=1)
     correct += (pred == target).sum().item()
     total += target.shape[0]
 
   epoch_loss = running_loss / X.shape[0]
   epoch_accuracy = correct / total 
-
-  # if train:
-  #   model.optimizer.post_update_params()
 
   return epoch_loss, epoch_accuracy
 
@@ -119,6 +121,7 @@ def train_val(
   X_val: np.ndarray, 
   y_val: np.ndarray,
   epochs: int = 100, 
+  batch_size: int = 32,
   verbose_freq: int = 1
 ) -> Tuple[List, List, List, List]:
   
@@ -126,11 +129,11 @@ def train_val(
   val_losses, val_accuracies = [], []
 
   for epoch in range(epochs):
-    train_loss, train_accuracy = epoch_loop(model, X_train, y_train, train=True)
+    train_loss, train_accuracy = epoch_loop(model, X_train, y_train, train=True, batch_size=batch_size)
     train_losses.append(train_loss)
     train_accuracies.append(train_accuracy)
 
-    val_loss, val_accuracy = epoch_loop(model, X_val, y_val, train=False)
+    val_loss, val_accuracy = epoch_loop(model, X_val, y_val, train=False, batch_size=batch_size)
     val_losses.append(val_loss)
     val_accuracies.append(val_accuracy)
 

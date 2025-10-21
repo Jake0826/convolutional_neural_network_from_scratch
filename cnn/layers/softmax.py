@@ -12,5 +12,5 @@ class Softmax(Module):
     for index, (single_output, single_dvalues) in enumerate(zip(self.output, dvalues)):
       single_output = single_output.reshape(-1, 1)
       jacobian_matrix = np.diagflat(single_output) - np.dot(single_output, single_output.T)
-      self.dx[index] = np.dot(jacobian_matrix, single_dvalues)
+      self.dx[index] = np.dot(jacobian_matrix, single_dvalues.T)
     return self.dx

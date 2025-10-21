@@ -2,6 +2,8 @@
 import numpy as np 
 from ..module import Module
 
+
+    
 #Per CS231 notes 'For Pooling layers, it is not common to pad the input using zero-padding.'
 class MaxPool2d(Module):
   def __init__(self, kernel_size: int = 2, stride: int = 2):
@@ -13,13 +15,13 @@ class MaxPool2d(Module):
       self.x = x
       
       pooled = self._get_strided_view(x)
-      self.output = np.max(pooled, axis=(4, 5))
+      res = np.max(pooled, axis=(4, 5))
       
-      B, C, H_out, W_out = self.output.shape
+      B, C, H_out, W_out = res.shape
       pooled_flat = pooled.reshape(B, C, H_out, W_out, -1)
       self.max_indices = np.argmax(pooled_flat, axis=4)
       
-      return self.output
+      return res
 
   def backward(self, dvalues):
       dinputs = np.zeros_like(self.x)
@@ -59,3 +61,53 @@ class MaxPool2d(Module):
           x.strides[2],
           x.strides[3]
       )
+  
+# Slower, more readable implementation below
+# class MaxPool2d(Module):
+#   def __init__(self, kernel_size=2, stride=2):
+#     self.kernel_size = kernel_size
+#     self.stride = stride 
+
+#   def forward(self, x):
+#     self.x = x
+
+#     B, C, H, W = x.shape
+#     H_out = (H - self.kernel_size) // self.stride + 1
+#     W_out = (W - self.kernel_size) // self.stride + 1
+
+#     self.output = np.zeros((
+#       B, 
+#       C, 
+#       H_out,
+#       W_out
+#     ))
+
+#     for b in range(B):
+#       for c in range(C):
+#         for h in range(H_out):
+#           for w in range(W_out):
+#             self.output[b,c,h,w] = np.max(
+#               x[b,c,
+#                 h * self.stride: h * self.stride + self.kernel_size,
+#                 w * self.stride: w * self.stride + self.kernel_size,
+#               ]
+#             )
+#     return self.output
+
+#   def backward(self, dvalues):
+#     B, C, H_out, W_out = self.output.shape
+#     dx = np.zeros_like(self.x)
+
+#     for b in range(B):
+#       for c in range(C):
+#         for h in range(H_out):
+#           for w in range(W_out):
+#             pool = self.x[b,c,
+#                 h * self.stride: h * self.stride + self.kernel_size,
+#                 w * self.stride: w * self.stride + self.kernel_size,
+#               ]
+#             idx = np.unravel_index(np.argmax(pool), pool.shape)
+#             h_coord = idx[0] + h*self.stride
+#             w_coord = idx[1] + w*self.stride
+#             dx[b,c,h_coord,w_coord] += dvalues[b,c,h,w]
+#     return dx
