@@ -6,6 +6,12 @@ from .module import Module
 from typing import List
 
 class Sequential(Module):
+  """  
+  This class chains together multiple layers, handles forward and backward
+  propagation automatically, and manages loss computation and optimization.
+  Users must provide a list of layers, a loss function, and an optimizer.
+  """
+
   def __init__(
     self, 
     layers: List[Module], 

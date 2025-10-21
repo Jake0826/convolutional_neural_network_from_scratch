@@ -76,16 +76,16 @@ train_losses, train_accuracies, val_losses, val_accuracies = train_val(
 
 ## Results
 
-In the notebooks, I achieve nearly identical accuracy compared to PyTorch implementations on both the spiral dataset and Fashion-MNIST, validating that the custom implementation is mathematically correct.
+In the notebooks in the `models/` directory, I achieve nearly identical accuracy compared to PyTorch implementations on both the spiral dataset and Fashion-MNIST, validating that the custom implementation is mathematically correct.
 
 ## Installation
 ```bash
-git clone <repository-url>
+git clone https://github.com/Jake0826/convolutional_neural_network
 cd convolutional_neural_network
 pip install -e .
 ```
 
-Check out the `models/` folder for complete examples.
+Check out the `models/` folder for complete examples and usage.
 
 ## Sources & Resources 
 

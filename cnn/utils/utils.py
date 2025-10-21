@@ -3,6 +3,10 @@ from ..sequential import Sequential
 from typing import Tuple, List
 import matplotlib.pyplot as plt 
 
+'''
+This file contains helper functions I use in /model to train the neural network.
+'''
+
 # Dataset from https://cs231n.github.io/neural-networks-case-study/ 
 def generate_spiral_data(N: int, D: int, K: int) -> Tuple[np.ndarray, np.ndarray]:
   X = np.zeros((N*K,D)) # data matrix (each row = single example)
@@ -90,8 +94,6 @@ def epoch_loop(
   
   running_loss, correct, total = 0, 0, 0
   for idx, (features, target) in enumerate(batch_generator(X, y, batch_size)):
-    if idx % 100 == 0:
-      print(f"{idx} out of {X.shape[0] // batch_size}")
     
     target = target.flatten()
 

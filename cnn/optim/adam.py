@@ -48,6 +48,3 @@ class Adam(Optimizer):
     layer.biases = layer.biases - self.lr * biases_momentums_corrected / np.sqrt(biases_cache_corrected + self.eps)
 
     self.iterations += 1
-
-  def post_update_params(self):
-    self.iterations += 1

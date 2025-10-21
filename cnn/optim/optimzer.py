@@ -1,5 +1,7 @@
 class Optimizer:
-
+  '''
+  Parent Optimizer Class
+  '''
   def __init__(self, lr=0.01):
     self.lr = lr
 
@@ -7,5 +9,3 @@ class Optimizer:
     layer.weights += -self.lr * layer.dweights
     layer.biases += -self.lr * layer.dbiases
     
-  # def post_update_params(self):
-  #   pass
