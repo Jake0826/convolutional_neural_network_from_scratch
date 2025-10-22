@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-By building a fully functional Convolutional Neural Network from scratch, I developed a deeper understanding of one of deep learning's core concepts. The `/cnn` directory contains all the building blocks required to construct and train a CNN from the ground up. The `/models` directory implements the neural networks by training on two seperate datasets and benchmarking performance against equivalent PyTorch models.
+I built a fully functional Convolutional Neural Network from scratch to better understand neural networks.  The `/cnn` directory contains all the building blocks required to construct and train a CNN from the ground up. The `/models` directory implements the neural networks by training on two seperate datasets and benchmarking performance against equivalent PyTorch models.
 
 ## Architecture
 
@@ -75,7 +75,7 @@ train_losses, train_accuracies, val_losses, val_accuracies = train_val(
 
 The `/models` directory contains experiments comparing my implementation against PyTorch models of identical architecture on two separate datasets. All training was performed locally using my Mac M1 CPU.
 
-### Spiral Dataset 
+## Spiral Dataset 
 
 ![Spiral Dataset](images/spiral/data.png)
 
@@ -91,20 +91,21 @@ ordered_layers = [
 ]
 ```
 
-| Metric | Custom Implementation | PyTorch Implementation |
+| Metric | Homemade Implementation | PyTorch Implementation |
 |--------|----------------------|------------------------|
 | Test Loss | 0.368 | 0.386 |
 | Test Accuracy | 86.3% | 85.0% |
 | Training Time | 5.2s | 14.6s |
 
-| Custom Implementation | PyTorch Implementation |
-|----------------------|------------------------|
-| ![Custom Model Metrics](images/spiral/homemade_metrics.png) | ![PyTorch Metrics](images/spiral/pytorch_metrics.png) |
-| ![Custom Decision Boundaries](images/spiral/homemade_decision_boundaries.png) | ![PyTorch Decision Boundaries](images/spiral/pytorch_decision_boundaries.png) |
+### Homemade Implementation
+![Homemade Model Metrics](images/spiral/homemade_metrics.png)
+![Homemade Decision Boundaries](images/spiral/homemade_decision_boundaries.png)
 
+### PyTorch Implementation
+![PyTorch Metrics](images/spiral/pytorch_metrics.png)
+![PyTorch Decision Boundaries](images/spiral/pytorch_decision_boundaries.png)
 
-
-### Fashion MNIST 
+## Fashion MNIST 
 
 ![Fashion MNIST Dataset](images/fashion_mnist/data.png)
 
@@ -130,15 +131,17 @@ ordered_layers = [
 ]
 ```
 
-| Metric | Custom Implementation | PyTorch Implementation |
+| Metric | Homemade Implementation | PyTorch Implementation |
 |--------|----------------------|------------------------|
 | Test Loss | 0.310 | 0.223 |
 | Test Accuracy | 89.3% | 91.6% |
 | Training Time | 80m | 3m |
 
-| Custom Implementation | PyTorch Implementation |
-|----------------------|------------------------|
-| ![Custom Model Metrics](images/fashion_mnist/homemade_metrics.png) | ![PyTorch Metrics](images/fashion_mnist/pytorch_metrics.png) |
+### Homemade Implementation
+![Homemade Model Metrics](images/fashion_mnist/homemade_metrics.png)
+
+### PyTorch Implementation
+![PyTorch Metrics](images/fashion_mnist/pytorch_metrics.png)
 
 ## Conclusion 
 
