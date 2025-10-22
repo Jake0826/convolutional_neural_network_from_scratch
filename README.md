@@ -2,11 +2,12 @@
 
 ## Project Overview
 
-By building a fully functional Convolutional Neural Network from scratch, I developed a deeper understanding of one of deep learning's core concepts. The `/cnn` directory contains all the building blocks required to construct and train a CNN from the ground up. The `/models` directory demonstrates the implementation by training on two datasets and benchmarking performance against equivalent PyTorch models.
+By building a fully functional Convolutional Neural Network from scratch, I developed a deeper understanding of one of deep learning's core concepts. The `/cnn` directory contains all the building blocks required to construct and train a CNN from the ground up. The `/models` directory implements the neural networks by training on two seperate datasets and benchmarking performance against equivalent PyTorch models.
 
 ## Architecture
 
-The `/cnn` directory contains modular components, each implemented in its own Python file. All layers inherit from a base `Module` class in `module.py`, which defines the forward and backward pass interface. The `Sequential` class orchestrates the training pipeline by chaining layers and coordinating forward propagation, backpropagation, and optimization.
+The `/cnn` directory contains the building blocks, with each component in its own Python file. All layers inherit from a base `Module` class that includes forward and backward methods. The `Sequential` class, which accepts an ordered list of layers, loss function, and optimizer, is the conductor that chains the pieces together.
+
 ```
 cnn/
 ├── layers/       
@@ -32,7 +33,7 @@ cnn/
 
 ## Usage Example
 ```python
-from cnn.layers import Linear, ReLU, Softmax
+from cnn.layers import Linear, ReLU, Softmax, Conv2d, MaxPool2d, Flatten
 from cnn.loss import CrossEntropyLoss
 from cnn.optim import Adam
 from cnn.sequential import Sequential
@@ -41,13 +42,21 @@ from cnn.utils import train_val
 # Define architecture
 model = Sequential(
     layers=[
-        Linear(D, 32),
-        ReLU(),
-        Linear(32, 16),
-        ReLU(),
-        Linear(16, K),
-        Softmax()
+
+    Conv2d(in_channels=1, out_channels=16, kernel_size=3),
+
+    ReLU(),
+
+    MaxPool2d(kernel_size = 2, stride = 2),
+
+    Flatten(),
+
+    Linear(1024, num_classes),
+
+    Softmax()
+
     ],
+
     loss_func=CrossEntropyLoss(),
     optimizer=Adam(lr=1e-3)
 )
@@ -64,7 +73,7 @@ train_losses, train_accuracies, val_losses, val_accuracies = train_val(
 
 ## Results
 
-The `/models` directory contains experiments comparing my implementation against PyTorch models of identical architecture on two separate datasets. All training was performed locally on my Mac.
+The `/models` directory contains experiments comparing my implementation against PyTorch models of identical architecture on two separate datasets. All training was performed locally using my Mac M1 CPU.
 
 ### Spiral Dataset 
 
@@ -131,6 +140,15 @@ ordered_layers = [
 |----------------------|------------------------|
 | ![Custom Model Metrics](images/fashion_mnist/homemade_metrics.png) | ![PyTorch Metrics](images/fashion_mnist/pytorch_metrics.png) |
 
+## Conclusion 
+
+I now have a much deeper understanding of CNNs. It's incredibly rewarding to have built a model from scratch that works correctly—even if its performance doesn't match PyTorch's highly optimized implementations, particularly with `Conv2d` and `MaxPool2d` layers, which are harder to optimize in Python.
+
+While CNNs are no longer the cutting edge of deep learning, and I may never resort to a CNN model, I think it's essential for me to understand the foundational ideas that led to today's leading architectures. My next project will focus on RNNs and language modeling before moving to attention. 
+
+## tldr 
+
+Up to now, I've mostly been a practitioner—but my goal over the coming months is to move beyond implementation and truly understand the underlying principles behind AI models.
 
 ## References 
 
