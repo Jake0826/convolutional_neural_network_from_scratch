@@ -19,7 +19,7 @@ class Conv2d(Module):
     self.stride = stride 
     self.padding = padding 
 
-    std = np.sqrt(2.0 / (self.in_channels * self.kernel_size * self.kernel_size))
+    k = 1 / (self.in_channels * self.kernel_size * self.kernel_size)
     shape = (
         self.out_channels, 
         self.in_channels, 
@@ -27,8 +27,8 @@ class Conv2d(Module):
         self.kernel_size
     )
 
-    self.weights = np.random.normal(0, std, shape)
-    self.biases = np.zeros((self.out_channels))
+    self.weights = np.random.uniform(-k, k, shape)
+    self.biases = np.random.uniform(-k, k, (self.out_channels))
 
   def forward(self, x):
       self.x = x

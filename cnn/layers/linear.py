@@ -3,9 +3,9 @@ from ..module import Module
 
 class Linear(Module):
   def __init__(self, n_inputs: int, n_neurons: int):
-    std = np.sqrt(2 / n_inputs)
+    k = np.sqrt(2 / n_inputs)
     shape = (n_inputs, n_neurons)
-    self.weights = np.random.normal(0, std, shape)
+    self.weights = np.random.uniform(-k, k, shape)
     self.biases =  np.zeros((1, n_neurons))
 
   def forward(self, x):

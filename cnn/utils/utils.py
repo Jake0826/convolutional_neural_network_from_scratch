@@ -1,7 +1,8 @@
 import numpy as np 
 from ..sequential import Sequential
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 import matplotlib.pyplot as plt 
+import matplotlib.ticker as ticker
 
 '''
 This file contains helper functions 
@@ -22,7 +23,7 @@ def generate_spiral_data(N: int, D: int, K: int) -> Tuple[np.ndarray, np.ndarray
   plt.xlabel("X_1")
   plt.ylabel("X_2")
   plt.title("Spiral Data")
-  plt.scatter(X[:, 0], X[:, 1], c=y, s=40, cmap='brg')
+  plt.scatter(X[:, 0], X[:, 1], c=y, cmap='brg')
   plt.show()
 
   return X, y
@@ -78,12 +79,10 @@ def batch_generator(
     batch_size: int = 32
 ): 
   num_samples = X.shape[0]
-  indicies = np.arange(num_samples)
+  indices = np.random.permutation(num_samples) 
   for i in range(0, num_samples, batch_size):
-    j = min(i + batch_size, num_samples)
-    idx = indicies[i:j]
-    yield X[idx], y[idx]
-
+      j = min(i + batch_size, num_samples)
+      yield X[indices[i:j]], y[indices[i:j]]
 
 def epoch_loop(
   model: Sequential, 
@@ -112,7 +111,7 @@ def epoch_loop(
     correct += (pred == target).sum().item()
     total += target.shape[0]
 
-  epoch_loss = running_loss / X.shape[0]
+  epoch_loss = running_loss / total
   epoch_accuracy = correct / total 
 
   return epoch_loss, epoch_accuracy
@@ -151,26 +150,30 @@ def plot_training_metrics(
   val_losses: List[float], 
   val_accuracies: List[float], 
   title: str = "",
+  xticks: Optional[List[int]] = None,
 ) -> None:
   
   epochs = np.arange(1, len(train_losses) + 1)
   fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
-  
+
+  if xticks:
+    ax1.set_xticks(xticks)
+    ax2.set_xticks(xticks)
   ax1.plot(epochs, train_losses, label='Train', linewidth=2, marker='o', markersize=3, alpha=0.8)
   ax1.plot(epochs, val_losses, label='Validation', linewidth=2, marker='s', markersize=3, alpha=0.8)
   ax1.set_title(f"{title} Cross Entropy Loss", fontweight='bold')
   ax1.set_xlabel('Epoch', fontsize=11)
   ax1.set_ylabel('Loss', fontsize=11)
   ax1.legend()
-  ax1.set_ylim(ymin = 0)
   
+  ax2.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
   ax2.plot(epochs, train_accuracies, label='Train', linewidth=2, marker='o', markersize=3, alpha=0.8)
   ax2.plot(epochs, val_accuracies, label='Validation', linewidth=2, marker='s', markersize=3, alpha=0.8)
   ax2.set_title(f"{title} Classification Accuracy", fontweight='bold')
   ax2.set_xlabel('Epoch', fontsize=11)
   ax2.set_ylabel('Accuracy', fontsize=11)
   ax2.legend()
-  ax2.set_ylim(ymin = 0, ymax = 1)
+  ax2.set_ylim(top = 1)
 
   plt.tight_layout()
   plt.show()

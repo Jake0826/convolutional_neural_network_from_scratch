@@ -11,15 +11,17 @@ import torch.nn.functional as F
 from typing import List, Tuple, Optional
 from contextlib import nullcontext
 
-'''
-This file contains helper functions I used to train 
-the reference PyTorch nerual networks.
-'''
+"""
+This file contains helper functions used to train the reference PyTorch neural networks. 
+It is not included in the /cnn directory because it is not part of the core ecosystem, 
+but rather a collection of utility functions supporting the reference PyTorch models.
+"""
+
 def pytorch_generate_dataloader(X, y, batch_size=32):
   X_tensor = torch.tensor(X, dtype=torch.float32)
   y_tensor = torch.tensor(y, dtype=torch.long)
   dataset = TensorDataset(X_tensor, y_tensor)
-  dataloader = DataLoader(dataset, batch_size=batch_size)
+  dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
   return dataloader
 
 

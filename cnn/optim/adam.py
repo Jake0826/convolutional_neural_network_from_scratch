@@ -6,7 +6,7 @@ from ..module import Module
 class Adam(Optimizer):
   def __init__(
       self, 
-      lr: float = 0.001, 
+      lr: float = 1e-3, 
       decay: float = 0.0, 
       eps: float = 1e-8, 
       beta_1: float = 0.9, 
@@ -16,7 +16,7 @@ class Adam(Optimizer):
     self.lr_0 = lr 
     self.lr = lr 
     self.decay = decay
-    self.iterations = 0 
+    self.iterations = 1
     self.eps = eps 
     self.beta_1 = beta_1
     self.beta_2 = beta_2
@@ -35,14 +35,14 @@ class Adam(Optimizer):
     layer.weights_momentums = self.beta_1 * layer.weights_momentums + (1 - self.beta_1) * layer.dweights
     layer.biases_momentums = self.beta_1 * layer.biases_momentums + (1 - self.beta_1) * layer.dbiases
 
-    weights_momentums_corrected = layer.weights_momentums / (1 - self.beta_1 ** (self.iterations + 1))
-    biases_momentums_corrected = layer.biases_momentums / (1 - self.beta_1 ** (self.iterations + 1))
+    weights_momentums_corrected = layer.weights_momentums / (1 - self.beta_1 ** self.iterations)
+    biases_momentums_corrected = layer.biases_momentums / (1 - self.beta_1 ** self.iterations)
 
     layer.weights_cache = self.beta_2 * layer.weights_cache + (1 - self.beta_2) * layer.dweights ** 2
     layer.biases_cache = self.beta_2 * layer.biases_cache + (1 - self.beta_2) * layer.dbiases ** 2
 
-    weights_cache_corrected = layer.weights_cache / (1 - self.beta_2 ** (self.iterations + 1))
-    biases_cache_corrected = layer.biases_cache / (1 - self.beta_2 ** (self.iterations + 1))
+    weights_cache_corrected = layer.weights_cache / (1 - self.beta_2 ** self.iterations)
+    biases_cache_corrected = layer.biases_cache / (1 - self.beta_2 ** self.iterations)
     
     layer.weights = layer.weights - self.lr * weights_momentums_corrected / np.sqrt(weights_cache_corrected + self.eps)
     layer.biases = layer.biases - self.lr * biases_momentums_corrected / np.sqrt(biases_cache_corrected + self.eps)
