@@ -105,7 +105,9 @@ First, I verified that my weight initialization distribution exactly matched PyT
 
 Next, I discovered that PyTorch uses a mathematical shortcut to combine Cross Entropy and Softmax backpropagation. I had implemented SoftMax and Cross Entropy Loss as separate layers (slower, but better for educational purposes), which requires extra clipping that PyTorch's combined trick avoids. Could this be causing the difference? To test this hypothesis, I tried using two separate PyTorch layers for softmax and loss (unconventional, but worth testing). The results didn't change—so this wasn't the culprit either.
 
-The batching implementation differs slightly between our approaches, and PyTorch's Adam optimizer likely includes additional bells and whistles I haven't implemented. These remain my leading suspects, but I need to dig deeper to identify the true cause of the minor performance difference.
+At this point, I figured it must be my Adam implementation for sure. But after reading the PyTorch documentation carefully, I am confident my optimizer directly follows PyTorch's https://docs.pytorch.org/docs/stable/generated/torch.optim.Adam.html and uses the same hyperparameters.
+
+I think the best way to resolve this is to run a trial using identical initialization weights and batching so there’s no randomness involved. That way, I can directly observe where the models begin to diverge. This is something I plan to do when I get back on Monday.
 
 ### Homemade Implementation
 ![Homemade Model Metrics](images/spiral/homemade_metrics.png)
@@ -152,6 +154,8 @@ ordered_layers = [
 In this example, PyTorch's performance is significantly better than mine: 3 minutes vs 80 minutes. This dramatic difference is primarily due to convolutions and max pooling operations, where my NumPy implementations are extraordinarily slow compared to PyTorch's highly optimized implementations.
 
 Linear layers are straightforward—I can use np.dot for matrix multiplication, which is close to what PyTorch does under the hood and benefits from optimized BLAS libraries. However, convolutions and pooling operations are far more complex. For example, in max pooling, I have to reshape a 4D matrix into a 6D matrix to extract each pooling window, then take the max of each grid. This involves significant memory manipulation. In contrast, PyTorch uses highly optimized C++ code that handle these operations efficiently at a low level, avoiding the overhead of Python and unnecessary memory reshaping.
+
+Again, there was a very small but consistent performance difference—this time, my model consistently performed about 2% worse than PyTorch’s. I suspect this is due to the same issue I encountered with the Spiral dataset, and it’s something I plan to investigate further next week.
 
 ![Homemade Model Metrics](images/fashion_mnist/homemade_metrics.png)
 
