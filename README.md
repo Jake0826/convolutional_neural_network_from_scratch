@@ -1,5 +1,10 @@
 # Convolutional Neural Network From Scratch
 
+## tldr 
+
+Up to now, I've mostly been a machine learning practitioner—but my goal over the coming months is to move beyond 'import torch.nn as nn' and truly understand the underlying principles behind AI models.
+
+
 ## Project Overview
 
 I built a fully functional Convolutional Neural Network from scratch to better understand neural networks.  The `/cnn` directory contains all the building blocks required to construct and train a CNN from the ground up. The `/models` directory implements the neural networks by training on two seperate datasets and benchmarking performance against equivalent PyTorch models.
@@ -167,10 +172,6 @@ Again, there was a very small but consistent performance difference—this time,
 I now have a much deeper understanding of CNNs. It's incredibly rewarding to have built a model from scratch that works correctly—even if its performance doesn't match PyTorch's highly optimized implementations, particularly with `Conv2d` and `MaxPool2d` layers, which are harder to optimize in Python.
 
 While CNNs are no longer the cutting edge of deep learning, and I may never resort to a CNN model, I think it's essential for me to understand the foundational ideas that led to today's leading architectures. My next project will focus on RNNs and language modeling before moving to attention. 
-
-## tldr 
-
-Up to now, I've mostly been a practitioner—but my goal over the coming months is to move beyond implementation and truly understand the underlying principles behind AI models.
 
 ## References 
 
